@@ -126,3 +126,34 @@ describe('DELETE /todos/:id', () => {
       .end(done);
   });
 });
+
+describe('PATCH /todos/:id', () => {
+  it('should update a todo by id', (done) => {
+    request(app)
+      .patch(`/todos/${ todos[0]._id.toHexString() }`)
+      .expect(200)
+      .expect((res) => {
+        expect(todos).toInclude({
+          _id: new ObjectID(res.body.todo._id),
+          text: res.body.todo.text
+        });
+      })
+      .end(done);
+  });
+
+  it('should return a 404 if todo not found', (done) => {
+    // make sure you get a 404 back
+    const id = new ObjectID();
+    request(app)
+      .patch(`/todos/${ id.toHexString() }`)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return a 404 for non-object ids', (done) => {
+    request(app)
+      .patch('/todos/000000')
+      .expect(404)
+      .end(done);
+  });
+});
