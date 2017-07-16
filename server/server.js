@@ -1,11 +1,11 @@
+require('./config/config');
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
 
-// Config
-const config = require('./config');
-const PORT = process.env.PORT || config.port || 5000;
+const PORT = process.env.PORT;
 
 // Models
 const { mongoose } = require('./db/mongoose');
