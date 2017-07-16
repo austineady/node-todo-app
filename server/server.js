@@ -4,6 +4,7 @@ const { ObjectID } = require('mongodb');
 
 // Config
 const config = require('./config');
+const PORT = process.env.PORT || config.port || 5000;
 
 // Models
 const { mongoose } = require('./db/mongoose');
@@ -50,8 +51,8 @@ app.get('/todos/:id', (req, res) => {
   });
 });
 
-app.listen(config.port, () => {
-  console.log(`Started on port ${ config.port }`);
+app.listen(PORT, () => {
+  console.log(`Started on port ${ PORT }`);
 });
 
 module.exports = {
