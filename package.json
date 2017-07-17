@@ -1,31 +1,32 @@
 {
-    "name": "todo-api",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
-        "start": "node server/server.js",
-        "watch": "nodemon server/server.js",
-        "test-watch": "nodemon --exec 'npm test'",
-        "deploy": "git push heroku master"
-    },
-    "engines": {
-        "node": "7.10.0"
-    },
-    "keywords": [],
-    "author": "Austin Eady",
-    "license": "ISC",
-    "dependencies": {
-        "body-parser": "1.15.2",
-        "express": "4.14.0",
-        "lodash": "4.15.0",
-        "mongodb": "2.2.19",
-        "mongoose": "4.11.3"
-    },
-    "devDependencies": {
-        "expect": "1.20.2",
-        "mocha": "3.0.2",
-        "supertest": "2.0.0"
-    }
+  "name": "todo-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha server/**/*.test.js",
+    "start": "node server/server.js",
+    "watch": "nodemon server/server.js",
+    "test-watch": "nodemon --exec 'npm test'",
+    "deploy": "git push heroku master"
+  },
+  "engines": {
+    "node": "7.10.0"
+  },
+  "keywords": [],
+  "author": "Austin Eady",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.15.2",
+    "express": "4.14.0",
+    "lodash": "4.15.0",
+    "mongodb": "2.2.19",
+    "mongoose": "4.11.3",
+    "validator": "5.6.0"
+  },
+  "devDependencies": {
+    "expect": "1.20.2",
+    "mocha": "3.0.2",
+    "supertest": "2.0.0"
+  }
 }

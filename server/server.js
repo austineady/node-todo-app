@@ -17,18 +17,8 @@ const app = express();
 // Tell express to use body-parser middleware
 app.use(bodyParser.json());
 
-app.post('/todos', (req, res) => {
-  const todo = new Todo({
-    text: req.body.text
-  });
-
-  todo.save().then((doc) => {
-    res.send(doc);
-  }, (e) => {
-    res.status(400).send(e);
-  });
-});
-
+// Todo Routes
+// ----------------------------------
 app.get('/todos', (req, res) => {
   Todo.find().then((todos) => {
     res.send({ todos });
@@ -70,6 +60,18 @@ app.delete('/todos/:id', (req, res) => {
   });
 });
 
+app.post('/todos', (req, res) => {
+  const todo = new Todo({
+    text: req.body.text
+  });
+
+  todo.save().then((doc) => {
+    res.send(doc);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
 app.patch('/todos/:id', (req, res) => {
   const id = req.params.id;
   const body = _.pick(req.body, ['text', 'completed']);
@@ -95,6 +97,20 @@ app.patch('/todos/:id', (req, res) => {
     res.status(400).send(e);
   });
 });
+
+// User Routes
+// -------------------------------------
+app.post('/users', (req, res) => {
+  const body = _.pick(req.body, ['email', 'password']);
+  const user = new User(body);
+
+  user.save().then((user) => {
+    res.send(user);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Started on port ${ PORT }`);

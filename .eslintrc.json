@@ -1,0 +1,27 @@
+{
+    "env": {
+        "node": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "no-underscore-dangle": "off",
+        "no-continue": "off",
+        "comma-dangle": ["warn", "never"],
+        "global-require": "off",
+        "prefer-arrow-callback": ["warn", { "allowNamedFunctions": true }],
+        "no-param-reassign": ["error", { "props": false }],
+        "max-len": "off",
+        "no-mixed-operators": ["off"],
+        "no-plusplus": ["off"],
+        "no-bitwise": "off",
+        "newline-per-chained-call": ["off"],
+        "no-restricted-syntax": ["off"],
+        "guard-for-in": ["off"],
+        "indent": ["warn", 2],
+        "linebreak-style": ["warn", "unix"],
+        "quotes": ["warn", "single"],
+        "semi": ["warn", "always"],
+        "no-console": 0
+    }
+}
