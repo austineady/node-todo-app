@@ -61,6 +61,16 @@ UserSchema.methods.generateAuthToken = function() {
   });
 };
 
+UserSchema.methods.removeToken = function(token) {
+  const user = this;
+
+  return user.update({
+    $pull: {
+      tokens: { token }
+    }
+  });
+};
+
 // Password hashing mongoose middleware
 UserSchema.pre('save', function(next) {
   // Must provide next argument and call it
@@ -105,10 +115,10 @@ UserSchema.statics.findByToken = function(token) {
 UserSchema.statics.findByCredentials = function(email, password) {
   // User is all users
   const User = this;
-  
+
   return User.findOne({
     email
-  }).then((user) => {
+  }).then(user => {
     if (!user) {
       return Promise.reject();
     }
