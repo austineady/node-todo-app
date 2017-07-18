@@ -11,6 +11,7 @@ const PORT = process.env.PORT;
 const { mongoose } = require('./db/mongoose');
 const Todo = require('./models/Todo');
 const User = require('./models/User');
+const { authenticate } = require('./middleware/authenticate');
 
 const app = express();
 
@@ -20,11 +21,14 @@ app.use(bodyParser.json());
 // Todo Routes
 // ----------------------------------
 app.get('/todos', (req, res) => {
-  Todo.find().then((todos) => {
-    res.send({ todos });
-  }, (e) => {
-    res.status(400).send(e);
-  });
+  Todo.find().then(
+    todos => {
+      res.send({ todos });
+    },
+    e => {
+      res.status(400).send(e);
+    }
+  );
 });
 
 app.get('/todos/:id', (req, res) => {
@@ -32,14 +36,16 @@ app.get('/todos/:id', (req, res) => {
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
   }
-  Todo.findById(id).then((todo) => {
-    if (!todo) {
-      return res.status(404).send();
-    }
-    res.send({ todo });
-  }).catch((e) => {
-    res.status(400).send(e);
-  });
+  Todo.findById(id)
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send();
+      }
+      res.send({ todo });
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
 });
 
 app.delete('/todos/:id', (req, res) => {
@@ -49,15 +55,17 @@ app.delete('/todos/:id', (req, res) => {
     return res.status(404).send();
   }
 
-  Todo.findByIdAndRemove(id).then((todo) => {
-    if (!todo) {
-      return res.status(404).send();
-    }
+  Todo.findByIdAndRemove(id)
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send();
+      }
 
-    res.status(200).send();
-  }).catch((e) => {
-    res.status(400).send(e);
-  });
+      res.status(200).send();
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
 });
 
 app.post('/todos', (req, res) => {
@@ -65,11 +73,14 @@ app.post('/todos', (req, res) => {
     text: req.body.text
   });
 
-  todo.save().then((doc) => {
-    res.send(doc);
-  }, (e) => {
-    res.status(400).send(e);
-  });
+  todo.save().then(
+    doc => {
+      res.send(doc);
+    },
+    e => {
+      res.status(400).send(e);
+    }
+  );
 });
 
 app.patch('/todos/:id', (req, res) => {
@@ -87,15 +98,17 @@ app.patch('/todos/:id', (req, res) => {
     body.completedAt = null;
   }
 
-  Todo.findByIdAndUpdate(id, { $set: body }, { new: true }).then((todo) => {
-    if (!todo) {
-      return res.status(404).send();
-    }
+  Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send();
+      }
 
-    res.send({ todo });
-  }).catch((e) => {
-    res.status(400).send(e);
-  });
+      res.send({ todo });
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
 });
 
 // User Routes
@@ -106,20 +119,29 @@ app.post('/users', (req, res) => {
 
   // user.generateAuthToken
 
-  user.save().then(() => {
-    return user.generateAuthToken();
-  }).then((token) => {
-    // send token as HTTP header
-    // x-name is a custom header
-    res.header('x-auth', token).send(user);
-  }, (e) => {
-    res.status(400).send(e);
-  });
+  user
+    .save()
+    .then(() => {
+      return user.generateAuthToken();
+    })
+    .then(
+      token => {
+        // send token as HTTP header
+        // x-name is a custom header
+        res.header('x-auth', token).send(user);
+      },
+      e => {
+        res.status(400).send(e);
+      }
+    );
 });
 
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
+});
 
 app.listen(PORT, () => {
-  console.log(`Started on port ${ PORT }`);
+  console.log(`Started on port ${PORT}`);
 });
 
 module.exports = {

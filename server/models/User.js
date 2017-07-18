@@ -35,15 +35,19 @@ const UserSchema = new mongoose.Schema({
 });
 
 // Create Instance Methods
+// ------------------------------
+
+// override what comes back from toJSON
 UserSchema.methods.toJSON = function() {
-  // override what comes back from toJSON
+  // instances get called with instance as this
+  // user is the individual user
   const user = this;
   const userObject = user.toObject(); // convert mongoose object to regular object
 
   return _.pick(userObject, ['_id', 'email']);
 };
 
-UserSchema.methods.generateAuthToken = function () {
+UserSchema.methods.generateAuthToken = function() {
   const user = this;
   // need to get access and token values
   const access = 'auth';
@@ -53,6 +57,28 @@ UserSchema.methods.generateAuthToken = function () {
 
   return user.save().then(() => {
     return token;
+  });
+};
+
+// Model methods
+UserSchema.statics.findByToken = function(token) {
+  // models get called with model as this
+  // User is all users
+  const User = this;
+  let decoded;
+
+  // jwt.verify throws and error if anything goes wrong
+  try {
+    decoded = jwt.verify(token, 'abc123');
+  } catch (e) {
+    return Promise.reject();
+  }
+
+  // If successfull, find User
+  return User.findOne({
+    _id: decoded._id,
+    'tokens.token': token, // allows you to access nested objects
+    'tokens.access': 'auth'
   });
 };
 
