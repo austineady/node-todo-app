@@ -104,8 +104,14 @@ app.post('/users', (req, res) => {
   const body = _.pick(req.body, ['email', 'password']);
   const user = new User(body);
 
-  user.save().then((user) => {
-    res.send(user);
+  // user.generateAuthToken
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    // send token as HTTP header
+    // x-name is a custom header
+    res.header('x-auth', token).send(user);
   }, (e) => {
     res.status(400).send(e);
   });
